@@ -25,7 +25,8 @@ var (
 	dstAccountName   string
 	dstContainerName string
 	dstAccountKey    string
-	blobName         string
+	srcBlobName      string
+	dstBlobName	  	 string
 )
 
 func handleError(err error) {
@@ -41,10 +42,11 @@ func main() {
 	flag.StringVar(&dstAccountName, "da", dstAccountName, "destination account name")
 	flag.StringVar(&dstAccountKey, "dk", dstAccountKey, "destination account key")
 	flag.StringVar(&dstContainerName, "dc", dstContainerName, "destination container name")
-	flag.StringVar(&blobName, "b", blobName, "blob name")
+	flag.StringVar(&srcBlobName, "sb", srcBlobName, "source blob name")
+	flag.StringVar(&dstBlobName, "db", dstBlobName, "destination blob name")
 	flag.Parse()
 
-	startCopyWithAccountKey(srcAccountName, srcContainerName, dstAccountName, dstContainerName, blobName)
+	startCopyWithAccountKey(srcAccountName, srcContainerName, dstAccountName, dstContainerName, srcBlobName, dstBlobName)
 }
 
 func getSASToken(accountName string, containerName string, blobName string, credential *azblob.SharedKeyCredential) (url string, token string, err error) {
@@ -63,10 +65,10 @@ func getSASToken(accountName string, containerName string, blobName string, cred
 	return url, token, nil
 }
 
-func startCopyWithAccountKey(srcAccountName string, srcContainerName string, dstAccountName string, dstContainerName string, blobName string) {
+func startCopyWithAccountKey(srcAccountName string, srcContainerName string, dstAccountName string, dstContainerName string, srcBlobName string, dstBlobName string) {
 
 	ctx := context.Background()
-	dstUrl, err := url.Parse(fmt.Sprintf("https://%s.blob.core.windows.net/%s/%s", dstAccountName, dstContainerName, blobName))
+	dstUrl, err := url.Parse(fmt.Sprintf("https://%s.blob.core.windows.net/%s/%s", dstAccountName, dstContainerName, dstBlobName))
 	handleError(err)
 
 	srcSharedKeyCredential, err := azblob.NewSharedKeyCredential(srcAccountName, srcAccountKey)
@@ -75,7 +77,7 @@ func startCopyWithAccountKey(srcAccountName string, srcContainerName string, dst
 	dstSharedKeyCredential, err := azblob.NewSharedKeyCredential(dstAccountName, dstAccountKey)
 	handleError(err)
 
-	uri, token, err := getSASToken(srcAccountName, srcContainerName, blobName, srcSharedKeyCredential)
+	uri, token, err := getSASToken(srcAccountName, srcContainerName, srcBlobName, srcSharedKeyCredential)
 	sasTokenURI := fmt.Sprintf("%s?%s", uri, token)
 	handleError(err)
 

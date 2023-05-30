@@ -1,10 +1,13 @@
+./build.sh
+
 srcAccountName='goblobcopysrc'
-srcAccountKey='rVPlzjcgyggGWFY1y/VbvaUv7Wk/iUZ7Qvo/a9KXBnvVsbOe/IU2rLiF/jtgSRw47DoYyQmdf5uq+AStdJuNmA=='
+srcAccountKey='2Ex1p6i7UKBPxOKmjLL/s83Ro6fbOHLwNbo1OyIYI8NEWiU5IT52TVTdqhlR1+Z577X2nrg5BRYh+AStQrf22w=='
 srcContainerName='src'
 dstAccountName='goblobcopydest'
 dstContainerName='dst'
-dstAccountKey='X28GbCkFfcNZLcLMCkCFPxYlAvUwjc4leLc9eH5SjWOcBgZLCglozvbQHcsuWdNmKEl7tZwLpGXY+AStOB9lZw=='
-blobName='test.dat'
+dstAccountKey='xxed5stXgMfzgJiBCtY5AQ9KIxnk/kjUTVCsrTQxbO3NIIT9x/9nc1fowr8Yur+GrrEejRljWueQ+ASt3AZCGQ=='
+srcBlobName='test.dat'
+dstBlobName='test-copy.dat'
 
 ./async-blob-copy \
 -sa $srcAccountName \
@@ -13,4 +16,5 @@ blobName='test.dat'
 -da $dstAccountName \
 -dk $dstAccountKey \
 -dc $dstContainerName \
--b $blobName
+-sb $srcBlobName \
+-db $dstBlobName
