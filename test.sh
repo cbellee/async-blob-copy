@@ -18,3 +18,6 @@ dstBlobName='test-copy.dat'
 -dc $dstContainerName \
 -sb $srcBlobName \
 -db $dstBlobName
+
+
+dfgdfgfg
