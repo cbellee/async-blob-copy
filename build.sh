@@ -1,1 +1,1 @@
-go build ./async-blob-copy.go
+go build ./cmd/async-blob-copy.go
