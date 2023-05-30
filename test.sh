@@ -20,4 +20,4 @@ dstBlobName='test-copy.dat'
 -db $dstBlobName
 
 
-dfgdfgfg
+gggggggggggggg
