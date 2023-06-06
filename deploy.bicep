@@ -18,8 +18,6 @@ var lawName = '${prefix}-law'
 var serverFarmName = '${prefix}-asp'
 var userManagedIdentityName = '${prefix}-umi'
 var funcName = '${prefix}-func'
-var eventSubscriptionName = guid(eventGridSystemTopic.id, func.id)
-var eventGridSystemTopicName = '${prefix}-evg'
 
 resource law 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
   location: location
@@ -34,41 +32,6 @@ resource law 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
 resource userManagedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
   name: userManagedIdentityName
   location: location
-}
-
-resource eventGridSystemTopic 'Microsoft.EventGrid/systemTopics@2022-06-15' = {
-  name: eventGridSystemTopicName
-  location: location
-  properties: {
-    source: sourceStorageAccount.id
-    topicType: 'Microsoft.Storage.StorageAccounts'
-  }
-}
-
-resource eventGridSubscription 'Microsoft.EventGrid/systemTopics/eventSubscriptions@2022-06-15' = {
-  name: eventSubscriptionName
-  parent: eventGridSystemTopic
-  properties: {
-    destination: {
-      endpointType: 'AzureFunction'
-      properties: {
-        resourceId: resourceId('Microsoft.Web/sites/functions/', func.name, 'EventGridTrigger')
-        maxEventsPerBatch: 1
-        preferredBatchSizeInKilobytes: 64
-      }   
-    }
-    filter: {
-      includedEventTypes: [
-        'Microsoft.Storage.BlobCreated'
-      ]
-      enableAdvancedFilteringOnArrays: true
-    }
-    eventDeliverySchema: 'EventGridSchema'
-    retryPolicy: {
-      maxDeliveryAttempts: 5
-      eventTimeToLiveInMinutes: 1440
-    }
-  }
 }
 
 resource ai 'microsoft.insights/components@2020-02-02' = {
@@ -201,6 +164,26 @@ resource funcStorageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   }
 }
 
+resource sourceBlobServices 'Microsoft.Storage/storageAccounts/blobServices@2022-09-01' = {
+  name: 'default'
+  parent: sourceStorageAccount
+}
+
+resource destinationBlobServices 'Microsoft.Storage/storageAccounts/blobServices@2022-09-01' = {
+  name: 'default'
+  parent: destinationStorageAccount
+}
+
+resource sourceContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-09-01' = {
+  name: 'src'
+  parent: sourceBlobServices
+}
+
+resource destinationContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-09-01' = {
+  name: 'dst'
+  parent: destinationBlobServices
+}
+
 resource serverFarm 'Microsoft.Web/serverfarms@2022-09-01' = {
   name: serverFarmName
   location: location
@@ -246,9 +229,6 @@ resource func 'Microsoft.Web/sites@2022-09-01' = {
     vnetImagePullEnabled: false
     vnetContentShareEnabled: false
     siteConfig: {
-      acrUseManagedIdentityCreds: true
-      acrUserManagedIdentityID: userManagedIdentity.properties.clientId
-      // linuxFxVersion: 'DOCKER|${containerImageName}'
       numberOfWorkers: 1
       alwaysOn: false
       http20Enabled: false
@@ -369,3 +349,4 @@ resource app_diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-0
 }
 
 output funcName string = func.name
+output sourceStorageAccountId string = sourceStorageAccount.id

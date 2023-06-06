@@ -1,16 +1,21 @@
-# async-blob-copy
+# asynchronous blob copy function
 
-Simple go command to copy blobs between storage accounts
+Simple Event Grid triggered golang Azure function to copy blobs between storage accounts.
+Event grid listens for `Blob.Created` events on the source storage account and calls the Azure function when they occur.
+
+## requirements
+
+- azure cli
+- bash shell
 
 ## usage
+update the following variables in `./deploy.sh`
 
-```golang
-$ ./async-blob-copy \
--sa <source storage account name> \
--sk <source storage account key> \
--sc <source container name> \
--da <destination storage account name> \
--dk <destination storage account key> \
--dc <destination container name> \
--b  <blob name>
+```bash
+location='australiaeast'
+prefix='async-blob-copy'
+```
+
+```bash
+$ ./deploy.sh
 ```
