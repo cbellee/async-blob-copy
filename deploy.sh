@@ -24,10 +24,12 @@ sourceStorageAccountId=`az deployment group show \
 cd ./handler
 
 # compile binary
-GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -trimpath handler.go
+GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -trimpath -o ../bin/handler
+cp ../bin/handler ./handler
 
 # publish function
 func azure functionapp publish $funcName
+rm ./handler
 
 cd ..
 
