@@ -1,5 +1,7 @@
 param location string
 param prefix string
+param sourceContainerName string
+param destinationContainerName string
 param diagnosticLogsRetentionInDays int = 7
 param diagnosticLogCategoriesToEnable array = [
   'FunctionAppLogs'
@@ -175,12 +177,12 @@ resource destinationBlobServices 'Microsoft.Storage/storageAccounts/blobServices
 }
 
 resource sourceContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-09-01' = {
-  name: 'src'
+  name: sourceContainerName
   parent: sourceBlobServices
 }
 
 resource destinationContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-09-01' = {
-  name: 'dst'
+  name: destinationContainerName
   parent: destinationBlobServices
 }
 

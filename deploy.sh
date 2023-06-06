@@ -12,6 +12,8 @@ funcName=`az deployment group create \
   --template-file deploy.bicep \
   --parameters location=$location \
   --parameters prefix=$prefix \
+  --parameters sourceContainerName='src' \
+  --parameters destinationContainerName='dst' \
   --query properties.outputs.funcName.value -o tsv`
 
 sourceStorageAccountId=`az deployment group show \
