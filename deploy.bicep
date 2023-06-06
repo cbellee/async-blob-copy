@@ -276,10 +276,6 @@ resource func 'Microsoft.Web/sites@2022-09-01' = {
           value: sourceStorageAccount.listKeys().keys[0].value
         }
         {
-          name: 'SRC_CONTAINER_NAME'
-          value: 'src'
-        }
-        {
           name: 'DST_ACCOUNT_NAME'
           value: destinationStorageAccount.name
         }
@@ -290,14 +286,6 @@ resource func 'Microsoft.Web/sites@2022-09-01' = {
         {
           name: 'DST_CONTAINER_NAME'
           value: 'dst'
-        }
-        {
-          name: 'SRC_BLOB_NAME'
-          value: 'test.dat'
-        }
-        {
-          name: 'DST_BLOB_NAME'
-          value: 'test-copy.dat'
         }
         {
           name: 'WEBSITES_ENABLE_APP_SERVICE_STORAGE'

@@ -1,7 +1,7 @@
 # asynchronous blob copy function
 
 Simple Event Grid triggered golang Azure function to copy blobs between storage accounts.
-Event grid listens for `Blob.Created` events on the source storage account and calls the Azure function when they occur.
+Event grid listens for `Blob.Created` events on the source storage account and calls the Azure function to copy the blob to the destination storage account.
 
 ## requirements
 
